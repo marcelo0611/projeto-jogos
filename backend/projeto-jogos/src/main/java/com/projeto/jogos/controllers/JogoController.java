@@ -22,7 +22,7 @@ import com.projeto.jogos.services.JogoService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/jogos")
+@RequestMapping("api/jogos")
 @CrossOrigin(origins = "*")
 public class JogoController {
 
