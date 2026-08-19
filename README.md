@@ -1,16 +1,16 @@
-🎮 GameVault - Gerenciador de Acervo Gamer
+ GameVault - Gerenciador de Acervo Gamer
 O GameVault é uma aplicação Full Stack para gerenciamento de biblioteca de jogos. O projeto conta com uma API REST robusta desenvolvida em Spring Boot e uma interface web moderna com estética Gamer/Cyberpunk em HTML, CSS e JavaScript puro, inspirada na exibição de cards de colecionáveis.
 
-🚀 Funcionalidades
+ Funcionalidades
 CRUD Completo de Jogos:
 
-➕ Cadastrar: Adicione novos jogos informando título, gênero, horas jogadas, suporte a multijogador e imagem de capa.
+ Cadastrar: Adicione novos jogos informando título, gênero, horas jogadas, suporte a multijogador e imagem de capa.
 
-🎮 Listar: Visualize seu acervo em formato de cards visuais organizados.
+ Listar: Visualize seu acervo em formato de cards visuais organizados.
 
-✏️ Editar: Atualize informações de jogos já cadastrados.
+ Editar: Atualize informações de jogos já cadastrados.
 
-🗑️ Excluir: Remova jogos do seu acervo com confirmação.
+ Excluir: Remova jogos do seu acervo com confirmação.
 
 Interface Estilizada:
 
@@ -34,7 +34,7 @@ Java 17+
 
 Spring Boot (Spring Web, Spring Data JPA)
 
-H2 Database / MySQL (Persistência de dados)
+MySQL (Persistência de dados)
 
 Maven (Gerenciamento de dependências)
 
@@ -45,10 +45,9 @@ CSS3 (Variáveis CSS, Flexbox, CSS Grid, Animações Neon, Design Responsivo)
 
 JavaScript (ES6+) (Fetch API, Manipulação do DOM, LocalStorage)
 
-Google Fonts (Orbitron e Rajdhani)
 
 
-📁 Estrutura do Projeto
+ Estrutura do Projeto
 
 gamevault/
 │
@@ -67,7 +66,7 @@ gamevault/
     └── script.js             # Consumo da API e manipulação dos Cards
 
 
-    ⚙️ Como Executar o Projeto
+     Como Executar o Projeto
 1. Pré-requisitos
 JDK 17 ou superior instalado.
 
