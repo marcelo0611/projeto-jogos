@@ -1,112 +1,121 @@
 const apiUrl = 'http://localhost:8080/api/jogos';
 
-document.getElementById('form-jogo').addEventListener('submit', function(e) {
-    e.preventDefault();
-    salvarJogo();
+// Regra visual automatizada: Se selecionar FPS, ativa o multiplayer automaticamente
+document.getElementById('genero').addEventListener('change', function() {
+    if (this.value === 'FPS') {
+        document.getElementById('multiplayer').checked = true;
+    }
 });
 
-async function carregarJogos() {
+async function listarJogos() {
     try {
-        const response = await fetch(apiUrl);
-        const jogos = await response.json();
-        const tbody = document.querySelector('#tabela-jogos tbody');
-        tbody.innerHTML = '';
+        const resposta = await fetch(apiUrl);
+        const jogos = await resposta.json();
+        
+        const tabela = document.getElementById('tabelaJogos');
+        tabela.innerHTML = '';
 
         jogos.forEach(jogo => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${jogo.id}</td>
-                <td>${jogo.titulo}</td>
+                <td>#${jogo.id}</td>
+                <td><strong>${jogo.titulo}</strong></td>
                 <td>${jogo.genero}</td>
-                <td>${jogo.horasJogadas}</td>
-                <td>${jogo.multijogador ? 'Sim' : 'Não'}</td>
+                <td>${jogo.horasJogadas}h</td>
                 <td>
-                    <button class="btn-editar" onclick="carregarParaEdicao(${jogo.id}, '${jogo.titulo}', '${jogo.genero}', ${jogo.horasJogadas}, ${jogo.multijogador})">Editar</button>
-                    <button class="btn-excluir" onclick="deletarJogo(${jogo.id})">Excluir</button>
+                    <span class="badge ${jogo.possuiMultijogador ? 'badge-yes' : 'badge-no'}">
+                        ${jogo.possuiMultijogador ? 'Sim' : 'Não'}
+                    </span>
+                </td>
+                <td>
+                    <button class="action-btn" title="Editar" onclick="prepararEdicao(${jogo.id}, '${escapeQuotes(jogo.titulo)}', '${jogo.genero}', ${jogo.horasJogadas}, ${jogo.possuiMultijogador})">✏️</button>
+                    <button class="action-btn" title="Deletar" onclick="deletarJogo(${jogo.id})">🗑️</button>
                 </td>
             `;
-            tbody.appendChild(tr);
+            tabela.appendChild(tr);
         });
-    } catch (error) {
-        console.error('Erro ao buscar jogos:', error);
+    } catch (erro) {
+        console.error('Erro ao listar jogos:', erro);
     }
 }
 
-async function salvarJogo() {
-    const id = document.getElementById('jogo-id').value;
-    const titulo = document.getElementById('titulo').value;
-    const genero = document.getElementById('genero').value;
-    const horasJogadas = document.getElementById('horas').value;
-    const multijogador = document.getElementById('multijogador').checked;
+document.getElementById('formJogo').addEventListener('submit', async function(event) {
+    event.preventDefault();
 
-    if (horasJogadas < 0) {
-        alert("O campo Horas Jogadas não pode ser negativo.");
-        return;
-    }
+    const id = document.getElementById('jogoId').value;
+    const jogoData = {
+        titulo: document.getElementById('titulo').value,
+        genero: document.getElementById('genero').value,
+        horasJogadas: parseInt(document.getElementById('horas').value),
+        possuiMultijogador: document.getElementById('multiplayer').checked
+    };
 
-    if (genero === 'FPS' && !multijogador) {
-        alert("Jogos do gênero FPS devem obrigatoriamente ter o modo Multijogador ativo.");
-        return;
-    }
-
-    const jogo = { titulo, genero, horasJogadas, multijogador };
-    const method = id ? 'PUT' : 'POST';
-    const url = id ? `${apiUrl}/${id}` : apiUrl;
+    const eEdicao = id !== '';
+    const url = eEdicao ? `${apiUrl}/${id}` : apiUrl;
+    const metodo = eEdicao ? 'PUT' : 'POST';
 
     try {
-        const response = await fetch(url, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(jogo)
+        const resposta = await fetch(url, {
+            method: metodo,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(jogoData)
         });
 
-        if (response.ok) {
-            resetarFormulario();
-            carregarJogos();
+        if (resposta.ok) {
+            alert(eEdicao ? 'Jogo atualizado com sucesso!' : 'Jogo cadastrado com sucesso!');
+            cancelarEdicao();
+            listarJogos();
         } else {
-            const errorText = await response.text();
-            alert(`Erro: ${errorText}`);
+            const erroMsg = await resposta.text();
+            alert('Atenção:\n' + erroMsg);
         }
-    } catch (error) {
-        console.error('Erro ao salvar:', error);
+    } catch (erro) {
+        console.error('Erro ao salvar jogo:', erro);
+        alert('Erro ao se comunicar com o servidor.');
     }
-}
+});
 
-function carregarParaEdicao(id, titulo, genero, horasJogadas, multijogador) {
-    document.getElementById('jogo-id').value = id;
+function prepararEdicao(id, titulo, genero, horas, multiplayer) {
+    document.getElementById('jogoId').value = id;
     document.getElementById('titulo').value = titulo;
     document.getElementById('genero').value = genero;
-    document.getElementById('horas').value = horasJogadas;
-    document.getElementById('multijogador').checked = multijogador;
+    document.getElementById('horas').value = horas;
+    document.getElementById('multiplayer').checked = multiplayer;
 
-    document.getElementById('btn-salvar').textContent = 'Atualizar Jogo';
-    document.getElementById('btn-cancelar').style.display = 'inline-block';
+    document.getElementById('formTitle').innerText = '✏️ Editar Jogo';
+    document.getElementById('btnSalvar').querySelector('.btn-text').innerText = 'Atualizar Jogo';
+    document.getElementById('btnCancelar').classList.remove('hidden');
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function resetarFormulario() {
-    document.getElementById('form-jogo').reset();
-    document.getElementById('jogo-id').value = '';
-    document.getElementById('btn-salvar').textContent = 'Salvar Jogo';
-    document.getElementById('btn-cancelar').style.display = 'none';
+function cancelarEdicao() {
+    document.getElementById('jogoId').value = '';
+    document.getElementById('formJogo').reset();
+    document.getElementById('formTitle').innerText = '🎮 Cadastrar Novo Jogo';
+    document.getElementById('btnSalvar').querySelector('.btn-text').innerText = 'Salvar Jogo';
+    document.getElementById('btnCancelar').classList.add('hidden');
 }
 
 async function deletarJogo(id) {
-    if (confirm('Tem certeza que deseja excluir este jogo?')) {
+    if (confirm(`Tem certeza que deseja remover o jogo #${id}?`)) {
         try {
-            const response = await fetch(`${apiUrl}/${id}`, {
-                method: 'DELETE'
-            });
-            if (response.ok) {
-                carregarJogos();
+            const resposta = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+            
+            if (resposta.ok) {
+                alert('Jogo removido!');
+                listarJogos();
             } else {
-                alert('Erro ao excluir jogo.');
+                alert('Não foi possível deletar o jogo.');
             }
-        } catch (error) {
-            console.error('Erro ao excluir:', error);
+        } catch (erro) {
+            console.error('Erro ao deletar jogo:', erro);
         }
     }
 }
 
-carregarJogos();
+function escapeQuotes(str) {
+    return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+listarJogos();
