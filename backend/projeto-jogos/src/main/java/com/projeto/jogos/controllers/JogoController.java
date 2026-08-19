@@ -1,6 +1,7 @@
 package com.projeto.jogos.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,42 +22,43 @@ import com.projeto.jogos.services.JogoService;
 import jakarta.validation.Valid;
 
 @RestController
-@CrossOrigin("*")	
-@RequestMapping("/api/jogos")
+@RequestMapping("/jogos")
+@CrossOrigin(origins = "*")
 public class JogoController {
 
     @Autowired
     private JogoService jogoService;
 
+    @GetMapping
+    public ResponseEntity<List<Jogo>> listarTodos() {
+        return ResponseEntity.ok(jogoService.listarTodos());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Jogo> buscarPorId(@PathVariable Long id) {
+        Optional<Jogo> jogo = jogoService.buscarPorId(id);
+        
+        if (jogo.isPresent()) {
+            return ResponseEntity.ok(jogo.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping
-    public ResponseEntity<?> cadastrarJogo(@Valid @RequestBody Jogo jogo) {
+    public ResponseEntity<?> cadastrar(@Valid @RequestBody Jogo jogo) {
         try {
-            Jogo novoJogo = jogoService.cadastrarJogo(jogo);
-            return ResponseEntity.status(HttpStatus.CREATED).body(novoJogo);
+            Jogo jogoSalvo = jogoService.salvar(jogo);
+            return ResponseEntity.status(HttpStatus.CREATED).body(jogoSalvo);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping
-    public ResponseEntity<List<Jogo>> listarJogos() {
-        return ResponseEntity.ok(jogoService.listarJogos());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
-        try {
-            Jogo jogo = jogoService.buscarPorId(id);
-            return ResponseEntity.ok(jogo);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarJogo(@PathVariable Long id, @Valid @RequestBody Jogo jogo) {
+    public ResponseEntity<?> atualizar(@PathVariable Long id, @Valid @RequestBody Jogo jogo) {
         try {
-            Jogo jogoAtualizado = jogoService.atualizarJogo(id, jogo);
+            Jogo jogoAtualizado = jogoService.atualizar(id, jogo);
             return ResponseEntity.ok(jogoAtualizado);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -64,12 +66,11 @@ public class JogoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletarJogo(@PathVariable Long id) {
-        try {
-            jogoService.deletarJogo(id);
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        if (jogoService.buscarPorId(id).isPresent()) {
+            jogoService.deletar(id);
             return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+        return ResponseEntity.notFound().build();
     }
 }
