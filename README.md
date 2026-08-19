@@ -83,7 +83,7 @@ Certifique-se de atualizar as dependências do Maven (Alt + F5 no Eclipse).
 
 Execute a classe principal da aplicação (@SpringBootApplication).
 
-O servidor iniciará na porta 8080 (http://localhost:8080/jogos).
+O servidor iniciará na porta 8080 (http://localhost:8080/api/jogos).
 
 3. Rodando o Frontend
 Navegue até a pasta frontend.
