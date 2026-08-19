@@ -28,7 +28,7 @@ Persistência de Capas: Suporte a URLs de imagens tratadas via LocalStorage, gar
 
 Fallback de Imagens: Caso o jogo não possua imagem cadastrada, uma capa padrão é atribuída com base no gênero.
 
-🛠️ Tecnologias Utilizadas
+Tecnologias Utilizadas
 Backend
 Java 17+
 
