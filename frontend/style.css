@@ -1,10 +1,12 @@
 :root {
     --bg-main: #0a0c14;
-    --bg-card: rgba(18, 22, 36, 0.75);
+    --bg-card: rgba(18, 22, 36, 0.85);
     --neon-cyan: #00f2fe;
     --neon-purple: #9d4edd;
     --neon-pink: #f72585;
     --neon-green: #00ff87;
+    --btn-edit: #f39c12;
+    --btn-delete: #e74c3c;
     --text-main: #e2e8f0;
     --text-muted: #94a3b8;
     --border-glow: rgba(0, 242, 254, 0.2);
@@ -40,13 +42,13 @@ body {
 }
 
 .container {
-    max-width: 950px;
+    max-width: 1000px;
     margin: 0 auto;
 }
 
 header {
     text-align: center;
-    margin-bottom: 35px;
+    margin-bottom: 30px;
 }
 
 .logo {
@@ -67,16 +69,54 @@ header {
     font-size: 1.1rem;
     letter-spacing: 2px;
     text-transform: uppercase;
+    margin-bottom: 25px;
 }
 
+/* NAVEGAÇÃO POR ABAS */
+.nav-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.tab-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-glow);
+    color: var(--text-muted);
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tab-btn:hover {
+    color: #fff;
+    border-color: var(--neon-cyan);
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(157, 78, 221, 0.2));
+    color: var(--neon-cyan);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+}
+
+/* CONTAINER PRINCIPAL E ABAS */
 .card {
     background: var(--bg-card);
     backdrop-filter: blur(12px);
     border: 1px solid var(--border-glow);
     border-radius: 16px;
     padding: 25px;
-    margin-bottom: 30px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 242, 254, 0.05);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+.hidden {
+    display: none !important;
 }
 
 h2 {
@@ -87,11 +127,102 @@ h2 {
     letter-spacing: 1px;
 }
 
+/* GRID DE CARDS ESTILO FUNKO/COLLECTION */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 25px;
+}
+
+.game-card {
+    background: rgba(10, 12, 20, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 8px 25px rgba(0, 242, 254, 0.25);
+}
+
+.game-card-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    background-color: #1a1d28;
+}
+
+.game-card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.game-card-info {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+}
+
+.game-card-info strong {
+    color: var(--text-main);
+}
+
+.game-card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-card {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: transform 0.2s, filter 0.2s;
+    color: #fff;
+}
+
+.btn-card:hover {
+    transform: scale(1.02);
+    filter: brightness(1.15);
+}
+
+.btn-editar {
+    background-color: var(--btn-edit);
+}
+
+.btn-excluir {
+    background-color: var(--btn-delete);
+}
+
+/* FORMULÁRIO */
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
     margin-bottom: 20px;
+}
+
+.full-width {
+    grid-column: 1 / -1;
 }
 
 .form-group {
@@ -110,6 +241,7 @@ label {
 
 input[type="text"],
 input[type="number"],
+input[type="url"],
 select {
     background: rgba(10, 12, 20, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -126,6 +258,13 @@ input:focus, select:focus {
     box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
 }
 
+.input-hint {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    margin-top: 5px;
+}
+
+/* CHECKBOX CUSTOMIZADO */
 .checkbox-group {
     justify-content: center;
 }
@@ -168,6 +307,7 @@ input:focus, select:focus {
 input:checked + .slider { background-color: var(--neon-purple); box-shadow: 0 0 10px var(--neon-purple); }
 input:checked + .slider:before { transform: translateX(22px); }
 
+/* BOTÕES DE FORMULÁRIO */
 .button-group {
     display: flex;
     gap: 15px;
@@ -203,56 +343,3 @@ input:checked + .slider:before { transform: translateX(22px); }
 }
 
 .btn-secondary:hover { background: rgba(255, 255, 255, 0.2); }
-
-.hidden { display: none; }
-
-.table-wrapper {
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-}
-
-th {
-    background: rgba(0, 242, 254, 0.05);
-    color: var(--neon-cyan);
-    padding: 14px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.85rem;
-    border-bottom: 2px solid var(--border-glow);
-}
-
-td {
-    padding: 14px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    font-size: 1rem;
-}
-
-tr:hover {
-    background: rgba(255, 255, 255, 0.03);
-}
-
-.badge {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-}
-
-.badge-yes { background: rgba(0, 255, 135, 0.15); color: var(--neon-green); border: 1px solid var(--neon-green); }
-.badge-no { background: rgba(247, 37, 133, 0.15); color: var(--neon-pink); border: 1px solid var(--neon-pink); }
-
-.action-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.1rem;
-    margin-right: 10px;
-    transition: transform 0.2s;
-}
-
-.action-btn:hover { transform: scale(1.2); }

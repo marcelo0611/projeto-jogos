@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameVault - Cadastro de Jogos</title>
+    <title>GameVault - Acervo Gamer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
@@ -15,17 +15,41 @@
 
     <div class="container">
         <header>
-            <h1 class="logo">Cadastro<span>Jogos</span></h1>
+            <h1 class="logo">GAME<span>VAULT</span></h1>
             <p class="subtitle">Gerenciador do Acervo de Jogos</p>
+            
+            <nav class="nav-tabs">
+                <button class="tab-btn active" id="tabListar" onclick="alternarAba('lista')">
+                    🎮 Jogos Cadastrados
+                </button>
+                <button class="tab-btn" id="tabCadastrar" onclick="alternarAba('cadastro')">
+                    ➕ Cadastrar Novo Jogo
+                </button>
+            </nav>
         </header>
 
-        <section class="card form-card">
-            <h2 id="formTitle">🎮 Cadastrar Novo Jogo</h2>
+        <!-- ABA 1: LISTAGEM DE JOGOS (EM CARDS) -->
+        <section id="secaoLista" class="card tab-content">
+            <h2>🕹️ Biblioteca de Jogos</h2>
+            <div id="containerJogos" class="cards-grid">
+                <!-- Os cards de jogos serão injetados aqui via JS -->
+            </div>
+        </section>
+
+        <!-- ABA 2: FORMULÁRIO DE CADASTRO/EDIÇÃO -->
+        <section id="secaoCadastro" class="card tab-content hidden">
+            <h2 id="formTitle">➕ Cadastrar Novo Jogo</h2>
             
             <form id="formJogo">
                 <input type="hidden" id="jogoId">
 
                 <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="imagemUrl">URL da Imagem / Capa do Jogo</label>
+                        <input type="url" id="imagemUrl" placeholder="https://link-da-imagem.com/capa.jpg">
+                        <small class="input-hint">Caso deixe em branco, uma imagem padrão do gênero será utilizada.</small>
+                    </div>
+
                     <div class="form-group">
                         <label for="titulo">Título do Jogo</label>
                         <input type="text" id="titulo" placeholder="Ex: Minecraft" required>
@@ -64,27 +88,6 @@
                     </button>
                 </div>
             </form>
-        </section>
-
-        <section class="card table-card">
-            <h2>🕹️ Jogos Cadastrados</h2>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Título</th>
-                            <th>Gênero</th>
-                            <th>Horas</th>
-                            <th>Multiplayer</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelaJogos">
-                        <!-- Dados injetados pelo JS -->
-                    </tbody>
-                </table>
-            </div>
         </section>
     </div>
 
